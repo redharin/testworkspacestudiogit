@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2dabd130-18ae-412d-be65-ff686c802c2c" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="3056a60c-5565-4e23-83cb-6f94f3e67883" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="root" database="emp_db" />
+	</db:config>
+	<configuration doc:name="Configuration" doc:id="9fdd9b0d-8b58-4d5d-8b91-1a7e9846170d" defaultErrorHandler-ref="test-global-error-handlerError_Handler" />
+	<flow name="test-app4-for-eachFlow" doc:id="32d56c9e-ff29-4bab-8c0a-9e1b884c6e18" >
+		<http:listener doc:name="Listener" doc:id="a633db1b-d2fc-46d1-962e-6061c29e98e1" config-ref="HTTP_Listener_config" path="/forEach">
+			<http:error-response >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="59ceca9f-d46f-4680-806e-e5bfac4a5852" message="#[payload]"/>
+		<foreach doc:name="For Each" doc:id="94201df4-6800-4ed9-8b3d-5b21fbcd14a6" >
+			<logger level="INFO" doc:name="Logger" doc:id="be3bd97c-d974-4fb8-980c-eb21aa46b33e" message="#[payload]"/>
+			<db:insert doc:name="Insert" doc:id="71b833a4-d8e9-462d-be3f-6d2cc8a0dce2" config-ref="Database_Config">
+				<db:sql >insert intestto emp_tbl (name,email,address,telephone) values (:name,:email,:address,:telephone)</db:sql>
+				<db:input-parameters ><![CDATA[#[{
+	name : payload.name,
+	email : payload.email,
+	address : payload.address,
+	telephone : payload.telephone
+}]]]></db:input-parameters>
+			</db:insert>
+			<logger level="INFO" doc:name="Logger" doc:id="2bd98035-8790-4fe1-b380-970a4c06d657" message="#[payload]"/>
+		</foreach>
+		<ee:transform doc:name="Transform Message" doc:id="db4df413-4e85-4af7-a23f-671e6c260812" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "Data inserted successfully."
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

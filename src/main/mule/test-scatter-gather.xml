@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="test-scatter-gatherFlow" doc:id="8487fa78-67d7-4834-bc11-d0421bb6f0aa" >
+		<http:listener doc:name="Listener" doc:id="ccf46ffd-5461-407b-868b-d52be82e2f95" config-ref="HTTP_Listener_config" path="/scatter"/>
+		<logger level="INFO" doc:name="Logger" doc:id="cd5731b5-0063-4f5a-a61b-3ccc8fa5a448" />
+		<scatter-gather doc:name="Scatter-Gather" doc:id="f352ca7c-ebb5-4535-b0f3-9c5013f7dd2f" >
+			<route >
+				<set-payload value='#["Hello.. I am scatter gather Route 1"]' doc:name="Set Payload" doc:id="fad9b6bd-23b1-42e6-9d48-d28b61b9cf05" />
+				<logger level="INFO" doc:name="Logger" doc:id="f5a2b25e-922e-4701-becf-7360c5e176f9" />
+			</route>
+			<route >
+				<set-payload value='#["Hello.. I am scatter gather Route 2"]' doc:name="Set Payload" doc:id="286e7bb9-2027-467b-a2d7-5e88bd4a4b38" />
+				<logger level="INFO" doc:name="Logger" doc:id="da4a2195-51c0-4135-8532-b4cd4d0a6352" />
+			</route>
+			<route >
+				<set-payload value='#["Hello.. I am scatter gather Route 3"]' doc:name="Set Payload" doc:id="2f81c753-9168-40dd-a976-18c837aa9036" />
+				<logger level="INFO" doc:name="Logger" doc:id="2dee38af-b4b4-4d79-81f4-718022ed96a9" />
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="d16aa1f8-5399-4f41-b4f6-e02ea229af5a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+Route1 : payload."0".payload,
+Route2 : payload."1".payload,
+Route3 : payload."2".payload
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

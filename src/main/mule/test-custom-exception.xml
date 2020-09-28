@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="test-custom-exceptionFlow" doc:id="d25a9939-518e-486e-8875-ff08e50982f0" >
+		<http:listener doc:name="Listener" doc:id="15129d3f-f952-4cac-9447-6c2e5987b32e" config-ref="HTTP_Listener_config" path="/raise-error">
+			<http:error-response statusCode="#[vars.statuscode]" reasonPhrase="#[vars.statusmessage]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<db:select doc:name="Select" doc:id="36017775-64a8-4e4e-9b28-6b12b5a8d494" config-ref="Database_Config">
+			<db:sql >select * from emp_tbl</db:sql>
+		</db:select>
+		<choice doc:name="Choice" doc:id="4b2eaf64-2d01-45ee-8d17-89e8c4138de8" >
+			<when expression="#[sizeOf(payload)&gt;30]">
+				<raise-error doc:name="Raise error" doc:id="72a8b093-28a8-4c63-82d4-260960b5d68f" type="CUS:COND_FAIL" description="choice condition failed due to size of payload more than 500"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="d0eeecf0-2831-41e2-a415-0330cccff508" />
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Transform Message" doc:id="a6c02611-214c-40a4-a83f-21c17f98e07b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="caddb98d-4243-4f13-b113-e8a763382d30" type="CUS:COND_FAIL">
+				<ee:transform doc:name="Transform Message" doc:id="06781812-cfd9-46e6-af91-98448c33d281" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "Custom exception raised due to payload size"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="statuscode" ><![CDATA[200]]></ee:set-variable>
+						<ee:set-variable variableName="statusmessage" ><![CDATA["SUCCESS"]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

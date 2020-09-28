@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="test-choice-routerFlow" doc:id="8fdf8ab9-c22d-4afd-b2f1-b4a57b1bce6f" >
+		<http:listener doc:name="Listener" doc:id="e3934cc7-4e73-42c3-a263-242b2c32ffcc" config-ref="HTTP_Listener_config" path="/choice">
+			<http:response statusCode="#[vars.status.code]" reasonPhrase="#[vars.smessage.message]"/>
+			<http:error-response >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="0eda639a-5a26-4a75-aa91-9099ed89530c" />
+		<db:select doc:name="Select" doc:id="802accee-5fb7-49cc-83ba-8133b7b35d49" config-ref="Database_Config">
+			<db:sql >Select * from emp_tbl where id = :id</db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	id : attributes.queryParams.id
+}]]]></db:input-parameters>
+		</db:select>
+		<logger level="INFO" doc:name="Logger" doc:id="95a71fc0-1197-4907-852a-347cbe1c302d" message="#[sizeOf(payload)]"/>
+		<ee:transform doc:name="Transform Message" doc:id="894cb555-b8f4-46ef-a580-8135d6befeae" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="127e687d-c2a4-43b7-84b5-6d59ce49128f" message="#[payload]"/>
+		<choice doc:name="Choice" doc:id="d7c192bb-c5d4-4335-bff1-4b900f0e1422" >
+			<when expression='#[sizeOf(payload)&gt;0]'>
+				<set-payload value="#[payload]" doc:name="Set Payload" doc:id="02fccb2c-9597-4f37-8303-a1d70f778771" />
+			</when>
+			<when expression='#[sizeOf(payload)&gt;3]'>
+				<set-payload value="#[payload]" doc:name="Set Payload" doc:id="dac04090-050b-41fb-9139-63e57a5d4d72" />
+			</when>
+			<otherwise >
+				<set-payload value='#["No data found"]' doc:name="Set Payload" doc:id="6b83d4af-7e68-4683-a92a-c179df5ad4ee" />
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Transform Message" doc:id="d4ac4d1d-d2a6-4c52-8a37-ec5dc3d9820e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

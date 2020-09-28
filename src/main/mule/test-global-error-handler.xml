@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="test-global-error-handlerError_Handler" doc:id="de0553fd-4ed7-45dc-aad7-2d3a2b5998ee" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e5e7d904-d363-4717-af00-a9bf2c6a701f" type="DB:CONNECTIVITY">
+			<ee:transform doc:name="Transform Message" doc:id="51978cfc-6889-4292-8c48-6a78497bcb44" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "Database server down, please try after some time"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="cde37e84-53ea-4e3d-9565-72239a9d1aa1" type="DB:QUERY_EXECUTION">
+			<ee:transform doc:name="Transform Message" doc:id="1955db82-b4ff-4b7b-aea9-094b4d61390f" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "SQL syntax error, check the syntax"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="01d49131-6f8c-4bf9-97a4-14c936cb44b9" type="DB:BAD_SQL_SYNTAX">
+			<ee:transform doc:name="Transform Message" doc:id="b9f4d1a2-9932-4380-9833-bf275ae2ed96" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "Syntax error"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d9848861-5c59-4b7e-8032-0d4e2ea87f8b" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="cf668097-30b7-4364-b1d7-dfbfc3060aa6" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message" : "An error occurred"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>
