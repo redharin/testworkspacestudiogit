@@ -31,6 +31,7 @@
                             <artifactId>mysql-connector-java-5.1.47-bin</artifactId>
                         </sharedLibrary>
                     </sharedLibraries>
+                <classifier>mule-application</classifier>
                 </configuration>
 			</plugin>
 		</plugins>
