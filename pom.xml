@@ -30,6 +30,10 @@
                             <groupId>com.mycompany</groupId>
                             <artifactId>mysql-connector-java-5.1.47-bin</artifactId>
                         </sharedLibrary>
+                    <sharedLibrary>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                        </sharedLibrary>
                     </sharedLibraries>
                 <classifier>mule-application</classifier>
                 </configuration>
@@ -60,6 +64,11 @@
             <groupId>com.mycompany</groupId>
             <artifactId>mysql-connector-java-5.1.47-bin</artifactId>
             <version>0.1</version>
+        </dependency>
+    	<dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.33</version>
         </dependency>
     </dependencies>
 

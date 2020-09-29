@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="ritvik-implementationFlow" doc:id="ceea150e-255c-4afc-9c3a-b10f8e8b7e2a" >
+		<http:listener doc:name="Listener" doc:id="6b14363c-b729-429b-a7b2-ea0544886e8b" config-ref="HTTP_Listener_config" path="/ritvik"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="fab3d0f1-02cf-4b44-a713-12e40c224664" />
+	</flow>
+</mule>

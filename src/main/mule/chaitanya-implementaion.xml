@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="chaitanya-implementaionFlow" doc:id="d00e8ecf-2868-4920-85a3-080c43d5b18e" >
+		<http:listener doc:name="Listener" doc:id="8b320336-7605-478c-a8e8-e150c9ef4dc9" config-ref="HTTP_Listener_config" path="/chaitanya"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="a7a2e2b7-e6c5-409a-a27a-e421e2ace175" />
+	</flow>
+</mule>
