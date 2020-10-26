@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="ritvik-implementation-test-suite.xml" />
+	<munit:test name="ritvik-implementation-test-suite-ritvik-implementationFlowTest" doc:id="ddedf27b-8609-47d9-9db1-2299a3a55471" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ritvik-implementationFlow" doc:id="f4d3d898-3788-429c-824e-225c5f0f23cc" name="ritvik-implementationFlow"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>
