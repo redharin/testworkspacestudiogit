@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="chaitanya-implementaion-test-suite.xml" />
+	<munit:test name="chaitanya-implementaion-test-suite-chaitanya-implementaionFlowTest" doc:id="9d411baf-7c7e-4700-9dd4-0f0ad7b033e6" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to chaitanya-implementaionFlow" doc:id="fe932f81-4a60-4b01-a2d1-a66296dfd676" name="chaitanya-implementaionFlow"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>
